@@ -4,6 +4,7 @@
    Es el "vendedor": muestra los productos, atiende el carrito
    y lleva el pedido al WhatsApp del dueño.
    Lee los datos de config.js y de data/productos.json.
+   Usa los componentes de Bootstrap 5 (Modal, Offcanvas y Toast).
    No hace falta modificar este archivo para cambiar de negocio.
    ========================================================== */
 
@@ -19,6 +20,10 @@ let varianteElegida = null;     // color elegido en la ventana de detalle
 let cantidadElegida = 1;        // cantidad elegida en la ventana de detalle
 
 const CANTIDAD_MAXIMA = 20;
+
+// Componentes de Bootstrap (se crean al iniciar la tienda)
+let ventanaProducto = null;   // bootstrap.Modal     → detalle del producto
+let avisoFlotante   = null;   // bootstrap.Toast     → "Agregado al carrito"
 
 // Atajo para no escribir document.getElementById cada vez
 const $ = (id) => document.getElementById(id);
@@ -76,13 +81,17 @@ function unirLista(lista) {
   return lista.slice(0, -1).join(", ") + " y " + lista[lista.length - 1];
 }
 
-// Mensaje flotante que desaparece solo
+// Crea un ícono de Bootstrap Icons: icono("trash3") → <i class="bi bi-trash3">
+function icono(nombre) {
+  const i = crear("i", "bi bi-" + nombre);
+  i.setAttribute("aria-hidden", "true");
+  return i;
+}
+
+// Mensaje flotante que desaparece solo (Toast de Bootstrap)
 function mostrarAviso(texto) {
-  document.querySelector(".aviso")?.remove();
-  const aviso = crear("div", "aviso", texto);
-  aviso.setAttribute("role", "status");
-  document.body.appendChild(aviso);
-  setTimeout(() => aviso.remove(), 2200);
+  $("aviso-texto").textContent = texto;
+  avisoFlotante.show();
 }
 
 
@@ -141,7 +150,7 @@ function mostrarCategorias() {
       productos.some((p) => p.categoria === categoria.id);
     if (!tieneProductos) return;
 
-    const boton = crear("button", "categoria", categoria.nombre);
+    const boton = crear("button", "btn btn-sm rounded-pill categoria", categoria.nombre);
     boton.type = "button";
     if (categoria.id === categoriaActual) boton.classList.add("activa");
 
@@ -170,27 +179,33 @@ function mostrarProductos() {
     .sort((a, b) => Number(a.agotado) - Number(b.agotado));
 
   grilla.innerHTML = "";
-  visibles.forEach((producto) => grilla.appendChild(crearTarjeta(producto)));
+  visibles.forEach((producto) => {
+    // Cada tarjeta va dentro de una columna de la grilla de Bootstrap
+    const columna = crear("div", "col");
+    columna.appendChild(crearTarjeta(producto));
+    grilla.appendChild(columna);
+  });
 
   $("sin-resultados").hidden = visibles.length > 0;
 }
 
 function crearTarjeta(producto) {
-  const tarjeta = crear("button", "tarjeta");
+  // Componente Card de Bootstrap; h-100 iguala la altura de todas
+  const tarjeta = crear("button", "card tarjeta h-100");
   tarjeta.type = "button";
   if (producto.agotado) tarjeta.classList.add("agotado");
 
-  const imagen = crearImagen(producto.imagen, producto.nombre, "tarjeta-imagen");
+  const imagen = crearImagen(producto.imagen, producto.nombre, "card-img-top tarjeta-imagen");
   imagen.loading = "lazy";   // carga la foto solo cuando se acerca a la pantalla
   tarjeta.appendChild(imagen);
 
   if (producto.agotado) {
-    tarjeta.appendChild(crear("span", "etiqueta-producto etiqueta-agotado", "Agotado"));
+    tarjeta.appendChild(crear("span", "badge rounded-pill etiqueta-producto etiqueta-agotado", "Agotado"));
   } else if (producto.nuevo) {
-    tarjeta.appendChild(crear("span", "etiqueta-producto etiqueta-nuevo", "Nuevo"));
+    tarjeta.appendChild(crear("span", "badge rounded-pill etiqueta-producto etiqueta-nuevo", "Nuevo"));
   }
 
-  const info = crear("div", "tarjeta-info");
+  const info = crear("div", "card-body tarjeta-info");
   info.appendChild(crear("span", "tarjeta-nombre", producto.nombre));
   info.appendChild(crear("span", "tarjeta-precio", formatearPrecio(producto.precio)));
   tarjeta.appendChild(info);
@@ -221,7 +236,7 @@ function abrirDetalle(producto) {
   $("detalle-variantes").hidden = variantes.length === 0;
 
   variantes.forEach((variante) => {
-    const boton = crear("button", "variante", variante);
+    const boton = crear("button", "btn btn-sm rounded-pill variante", variante);
     boton.type = "button";
     boton.addEventListener("click", () => {
       varianteElegida = variante;
@@ -235,7 +250,7 @@ function abrirDetalle(producto) {
   botonAgregar.disabled = Boolean(producto.agotado);
   botonAgregar.textContent = producto.agotado ? "Agotado por ahora" : "Agregar al carrito";
 
-  abrirVentana($("modal-producto"));
+  ventanaProducto.show();
 
   // Cambia la dirección a .../#id-del-producto para poder compartirla
   history.replaceState(null, "", "#" + producto.id);
@@ -276,7 +291,7 @@ function agregarAlCarrito() {
 
   guardarCarrito();
   actualizarCarrito();
-  cerrarVentana($("modal-producto"));
+  ventanaProducto.hide();
   mostrarAviso("✓ Agregado al carrito");
 
   // Pequeño salto del contador
@@ -306,8 +321,9 @@ function actualizarCarrito() {
     info.appendChild(crear("p", "item-precio", formatearPrecio(item.precio * item.cantidad)));
     fila.appendChild(info);
 
-    const quitar = crear("button", "btn-quitar", "🗑️");
+    const quitar = crear("button", "btn btn-quitar");
     quitar.type = "button";
+    quitar.appendChild(icono("trash3"));
     quitar.setAttribute("aria-label", "Quitar " + item.nombre);
     quitar.addEventListener("click", () => {
       carrito.splice(indice, 1);
@@ -374,6 +390,7 @@ function mostrarOpcionesEntrega() {
 
     const radio = document.createElement("input");
     radio.type = "radio";
+    radio.className = "form-check-input";
     radio.name = "entrega";
     radio.value = opcion.id;
     radio.checked = indice === 0;
@@ -414,7 +431,7 @@ function calcularTotal() {
 function actualizarTotal() {
   const cuenta = calcularTotal();
   $("carrito-total").textContent = formatearPrecio(cuenta.total);
-  document.querySelector(".nota-envio").textContent = cuenta.envioFijo
+  $("nota-envio").textContent = cuenta.envioFijo
     ? `Incluye envío: ${formatearPrecio(cuenta.envio)}`
     : "El costo de envío se coordina por WhatsApp.";
 }
@@ -470,24 +487,19 @@ function enviarPedido(evento) {
 
 
 /* ==========================================================
-   11. ABRIR Y CERRAR VENTANAS
+   11. COMPONENTES DE BOOTSTRAP
+   Bootstrap se encarga de abrir, cerrar, animar y bloquear
+   el fondo. El carrito (Offcanvas) se abre solo con
+   data-bs-toggle en index.html, sin JavaScript extra.
    ========================================================== */
-function abrirVentana(ventana) {
-  ventana.hidden = false;
-  document.body.classList.add("sin-scroll");
-}
+function prepararComponentes() {
+  ventanaProducto = new bootstrap.Modal($("modal-producto"));
+  avisoFlotante   = new bootstrap.Toast($("aviso"));
 
-function cerrarVentana(ventana) {
-  ventana.hidden = true;
-
-  if (ventana.id === "modal-producto") {
-    // Quita el #producto de la dirección
+  // Al cerrar el detalle, quita el #producto de la dirección
+  $("modal-producto").addEventListener("hidden.bs.modal", () => {
     history.replaceState(null, "", location.pathname + location.search);
-  }
-
-  if ($("modal-producto").hidden && $("carrito").hidden) {
-    document.body.classList.remove("sin-scroll");
-  }
+  });
 }
 
 // Si alguien entra con un link compartido (.../#manta-felpa),
@@ -510,22 +522,7 @@ function conectarEventos() {
   $("btn-mas").addEventListener("click", () => cambiarCantidad(1));
   $("btn-agregar").addEventListener("click", agregarAlCarrito);
 
-  $("btn-abrir-carrito").addEventListener("click", () => abrirVentana($("carrito")));
   $("carrito-formulario").addEventListener("submit", enviarPedido);
-
-  document.querySelectorAll("[data-cerrar]").forEach((elemento) =>
-    elemento.addEventListener("click", () => cerrarVentana($("modal-producto")))
-  );
-  document.querySelectorAll("[data-cerrar-carrito]").forEach((elemento) =>
-    elemento.addEventListener("click", () => cerrarVentana($("carrito")))
-  );
-
-  // Tecla Esc cierra la ventana abierta (en computadora)
-  document.addEventListener("keydown", (evento) => {
-    if (evento.key !== "Escape") return;
-    if (!$("modal-producto").hidden) cerrarVentana($("modal-producto"));
-    else if (!$("carrito").hidden) cerrarVentana($("carrito"));
-  });
 }
 
 
@@ -537,7 +534,12 @@ async function iniciar() {
     console.error("Falta config.js o tiene un error. Revisa que esté antes de script.js en index.html.");
     return;
   }
+  if (typeof bootstrap === "undefined") {
+    console.error("No cargó Bootstrap. Revisa tu conexión a internet o el enlace del CDN en index.html.");
+    return;
+  }
 
+  prepararComponentes();
   aplicarConfig();
   mostrarOpcionesEntrega();
   conectarEventos();
