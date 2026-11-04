@@ -1,0 +1,68 @@
+[
+  {
+    "id": "manta-felpa",
+    "nombre": "Manta de felpa",
+    "categoria": "hogar",
+    "precio": 45.00,
+    "imagen": "img/productos/manta-felpa.jpg",
+    "descripcion": "Manta suave y abrigadora de felpa con textura a rayas. Ideal para las noches frías.",
+    "variantes": ["Gris oscuro", "Beige", "Azul petróleo", "Rojo", "Camel", "Coral"],
+    "nuevo": true,
+    "agotado": false
+  },
+  {
+    "id": "rizador-pestanas",
+    "nombre": "Rizador de pestañas eléctrico",
+    "categoria": "belleza",
+    "precio": 35.00,
+    "imagen": "img/productos/rizador-pestanas.jpg",
+    "descripcion": "Rizador de pestañas recargable por USB. Pestañas curvas y con efecto duradero.",
+    "variantes": [],
+    "nuevo": true,
+    "agotado": false
+  },
+  {
+    "id": "soporte-celular-parlante",
+    "nombre": "Soporte de celular con parlante y power bank",
+    "categoria": "tecnologia",
+    "precio": 49.00,
+    "imagen": "img/productos/soporte-celular-parlante.jpg",
+    "descripcion": "Soporte para celular con parlante incorporado y batería para cargar tu teléfono.",
+    "variantes": [],
+    "nuevo": false,
+    "agotado": false
+  },
+  {
+    "id": "escalera-kids",
+    "nombre": "Escalera kids para baño",
+    "categoria": "ninos",
+    "precio": 89.00,
+    "imagen": "img/productos/escalera-kids.jpg",
+    "descripcion": "Asiento entrenador con escalera para que los niños usen el baño solos y seguros.",
+    "variantes": [],
+    "nuevo": false,
+    "agotado": false
+  },
+  {
+    "id": "bandeja-3-piezas",
+    "nombre": "Bandeja 3 piezas",
+    "categoria": "cocina",
+    "precio": 59.00,
+    "imagen": "img/productos/bandeja-3-piezas.jpg",
+    "descripcion": "Juego de 3 bandejas cuadradas, perfectas para piqueos y reuniones.",
+    "variantes": [],
+    "nuevo": false,
+    "agotado": false
+  },
+  {
+    "id": "organizador-kawaii",
+    "nombre": "Organizador kawaii 4 niveles",
+    "categoria": "ninos",
+    "precio": 99.00,
+    "imagen": "img/productos/organizador-kawaii.jpg",
+    "descripcion": "Organizador de juguetes con 4 niveles y ruedas. Mantiene el cuarto ordenado.",
+    "variantes": [],
+    "nuevo": true,
+    "agotado": false
+  }
+]
