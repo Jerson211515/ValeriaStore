@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ==========================================================
+       DATOS PARA BUSCADORES Y VISTA PREVIA EN WHATSAPP
+       WhatsApp lee estas líneas ANTES de que cargue el JavaScript,
+       por eso se escriben aquí y no en config.js.
+       Al publicar en GitHub Pages, cambia "TU-URL" por la dirección real.
+       ========================================================== -->
+  <title>ValeriaStore | Productos importados en Chachapoyas</title>
+  <meta name="description" content="Productos importados para el hogar, cocina, belleza, tecnología y niños. Delivery en Chachapoyas y envíos por agencia a todo el Perú.">
+  <meta property="og:title" content="ValeriaStore">
+  <meta property="og:description" content="Productos importados en Chachapoyas. Pide fácil por WhatsApp.">
+  <meta property="og:image" content="https://TU-URL/img/portada.png">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="img/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================
+       1. ENCABEZADO: logo, nombre y botón del carrito
+       ========================================================== -->
+  <header class="encabezado">
+    <a href="#" class="marca">
+      <img src="img/logo.png" alt="Logo de la tienda" class="marca-logo" id="tienda-logo">
+      <span class="marca-nombre" id="tienda-nombre">ValeriaStore</span>
+    </a>
+
+    <button class="btn-carrito" id="btn-abrir-carrito" aria-label="Abrir carrito">
+      🛒
+      <span class="carrito-contador" id="carrito-contador">0</span>
+    </button>
+  </header>
+
+
+  <!-- ==========================================================
+       2. PORTADA: ilustración, eslogan y formas de pago/entrega
+       ========================================================== -->
+  <section class="portada">
+    <img src="img/portada.png" alt="Ilustración de la tienda" class="portada-imagen" id="tienda-portada">
+    <div class="portada-texto">
+      <h1 id="tienda-eslogan">Productos importados en Chachapoyas</h1>
+      <p class="portada-info">
+        🚚 Delivery y envíos por agencia &nbsp;·&nbsp;
+        💳 Pagos con <span id="tienda-pagos">Yape y Plin</span>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       3. BUSCADOR Y CATEGORÍAS
+       Los botones de categoría los crea script.js desde config.js
+       ========================================================== -->
+  <section class="filtros">
+    <input type="search" id="buscador" class="buscador"
+           placeholder="Buscar producto..." aria-label="Buscar producto">
+
+    <nav class="categorias" id="lista-categorias" aria-label="Categorías">
+      <!-- script.js inserta aquí los botones -->
+    </nav>
+  </section>
+
+
+  <!-- ==========================================================
+       4. CATÁLOGO DE PRODUCTOS
+       script.js lee data/productos.json y crea las tarjetas aquí
+       ========================================================== -->
+  <main class="catalogo">
+    <div class="grilla-productos" id="grilla-productos">
+      <!-- script.js inserta aquí las tarjetas -->
+    </div>
+
+    <p class="sin-resultados" id="sin-resultados" hidden>
+      No encontramos ese producto. Escríbenos por WhatsApp y te ayudamos.
+    </p>
+  </main>
+
+
+  <!-- ==========================================================
+       5. VENTANA DE DETALLE DEL PRODUCTO
+       Se abre al tocar un producto: foto grande, descripción,
+       elección de color y cantidad
+       ========================================================== -->
+  <div class="modal" id="modal-producto" hidden>
+    <div class="modal-fondo" data-cerrar></div>
+
+    <div class="modal-contenido" role="dialog" aria-modal="true" aria-labelledby="detalle-nombre">
+      <button class="btn-cerrar" data-cerrar aria-label="Cerrar">✕</button>
+
+      <img src="" alt="" class="detalle-imagen" id="detalle-imagen">
+      <h2 class="detalle-nombre" id="detalle-nombre"></h2>
+      <p class="detalle-precio" id="detalle-precio"></p>
+      <p class="detalle-descripcion" id="detalle-descripcion"></p>
+
+      <!-- Solo se muestra si el producto tiene colores -->
+      <div class="detalle-variantes" id="detalle-variantes" hidden>
+        <p class="etiqueta">Elige un color:</p>
+        <div class="lista-variantes" id="lista-variantes"></div>
+      </div>
+
+      <div class="detalle-cantidad">
+        <p class="etiqueta">Cantidad:</p>
+        <button class="btn-cantidad" id="btn-menos" aria-label="Menos">−</button>
+        <span id="detalle-cantidad">1</span>
+        <button class="btn-cantidad" id="btn-mas" aria-label="Más">+</button>
+      </div>
+
+      <button class="btn-principal" id="btn-agregar">Agregar al carrito</button>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       6. CARRITO (panel lateral)
+       Lista de productos, datos del cliente, entrega y total
+       ========================================================== -->
+  <aside class="carrito" id="carrito" hidden>
+    <div class="modal-fondo" data-cerrar-carrito></div>
+
+    <div class="carrito-panel" role="dialog" aria-modal="true" aria-labelledby="carrito-titulo">
+      <div class="carrito-cabecera">
+        <h2 id="carrito-titulo">Tu pedido</h2>
+        <button class="btn-cerrar" data-cerrar-carrito aria-label="Cerrar carrito">✕</button>
+      </div>
+
+      <!-- Productos agregados -->
+      <ul class="carrito-lista" id="carrito-lista"></ul>
+      <p class="carrito-vacio" id="carrito-vacio">Tu carrito está vacío.</p>
+
+      <!-- Datos del cliente: solo se muestran si hay productos -->
+      <form class="carrito-formulario" id="carrito-formulario" hidden>
+        <label class="etiqueta" for="cliente-nombre">Tu nombre</label>
+        <input type="text" id="cliente-nombre" placeholder="Ej.: María López" required>
+
+        <p class="etiqueta">¿Cómo lo recibes?</p>
+        <div class="opciones-entrega" id="opciones-entrega">
+          <!-- script.js inserta aquí las opciones desde config.js -->
+        </div>
+
+        <label class="etiqueta" for="cliente-dato" id="cliente-dato-etiqueta">Dirección o referencia</label>
+        <input type="text" id="cliente-dato" required>
+
+        <div class="carrito-total">
+          <span>Total</span>
+          <strong id="carrito-total">S/ 0.00</strong>
+        </div>
+        <p class="nota-envio">El costo de envío se coordina por WhatsApp.</p>
+
+        <button type="submit" class="btn-whatsapp">
+          Pedir por WhatsApp
+        </button>
+      </form>
+    </div>
+  </aside>
+
+
+  <!-- ==========================================================
+       7. PIE DE PÁGINA
+       ========================================================== -->
+  <footer class="pie">
+    <p>© 2026 <span id="pie-nombre">ValeriaStore</span> · <span id="pie-ciudad">Chachapoyas</span>, Perú</p>
+    <p class="pie-credito">Tienda creada por JersonTIC</p>
+  </footer>
+
+
+  <!-- ==========================================================
+       SCRIPTS: el orden importa
+       1° config.js (los datos)  →  2° script.js (la lógica que los usa)
+       ========================================================== -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
