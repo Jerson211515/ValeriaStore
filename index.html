@@ -8,60 +8,88 @@
        DATOS PARA BUSCADORES Y VISTA PREVIA EN WHATSAPP
        WhatsApp lee estas líneas ANTES de que cargue el JavaScript,
        por eso se escriben aquí y no en config.js.
-       Al publicar en GitHub Pages, cambia "TU-URL" por la dirección real.
        ========================================================== -->
   <title>ValeriaStore | Productos importados en Chachapoyas</title>
   <meta name="description" content="Productos importados para el hogar, cocina, belleza, tecnología y niños. Delivery en Chachapoyas y envíos por agencia a todo el Perú.">
   <meta property="og:title" content="ValeriaStore">
   <meta property="og:description" content="Productos importados en Chachapoyas. Pide fácil por WhatsApp.">
-  <meta property="og:image" content="https://TU-URL/img/portada.png">
+  <meta property="og:image" content="https://jerson211515.github.io/ValeriaStore/img/portada.png">
   <meta property="og:type" content="website">
 
   <link rel="icon" href="img/logo.png">
+
+  <!-- ==========================================================
+       FRAMEWORK: BOOTSTRAP 5 + BOOTSTRAP ICONS
+       Se cargan desde internet (CDN), no hay que descargarlos.
+       style.css va DESPUÉS para personalizar Bootstrap
+       con los colores de la tienda.
+       ========================================================== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- ==========================================================
        1. ENCABEZADO: logo, nombre y botón del carrito
+       Bootstrap: sticky-top, container, d-flex, badge
        ========================================================== -->
-  <header class="encabezado">
-    <a href="#" class="marca">
-      <img src="img/logo.png" alt="Logo de la tienda" class="marca-logo" id="tienda-logo">
-      <span class="marca-nombre" id="tienda-nombre">ValeriaStore</span>
-    </a>
+  <header class="encabezado sticky-top">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <a href="#" class="marca d-flex align-items-center gap-2 text-decoration-none">
+        <img src="img/logo.png" alt="Logo de la tienda" class="marca-logo rounded-circle" id="tienda-logo">
+        <span class="marca-nombre" id="tienda-nombre">ValeriaStore</span>
+      </a>
 
-    <button class="btn-carrito" id="btn-abrir-carrito" aria-label="Abrir carrito">
-      🛒
-      <span class="carrito-contador" id="carrito-contador">0</span>
-    </button>
+      <!-- data-bs-toggle abre el panel del carrito sin escribir JavaScript -->
+      <button class="btn btn-carrito position-relative" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#carrito"
+              aria-controls="carrito" aria-label="Abrir carrito">
+        <i class="bi bi-bag-heart-fill"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill carrito-contador"
+              id="carrito-contador">0</span>
+      </button>
+    </div>
   </header>
 
 
   <!-- ==========================================================
        2. PORTADA: ilustración, eslogan y formas de pago/entrega
+       Bootstrap: sistema de grilla (row / col)
        ========================================================== -->
   <section class="portada">
-    <img src="img/portada.png" alt="Ilustración de la tienda" class="portada-imagen" id="tienda-portada">
-    <div class="portada-texto">
-      <h1 id="tienda-eslogan">Productos importados en Chachapoyas</h1>
-      <p class="portada-info">
-        🚚 Delivery y envíos por agencia &nbsp;·&nbsp;
-        💳 Pagos con <span id="tienda-pagos">Yape y Plin</span>
-      </p>
+    <div class="container">
+      <div class="row align-items-center justify-content-center g-4 text-center text-lg-start">
+        <div class="col-12 col-lg-4">
+          <img src="img/portada.png" alt="Ilustración de la tienda"
+               class="portada-imagen img-fluid" id="tienda-portada">
+        </div>
+        <div class="col-12 col-lg-6 portada-texto">
+          <h1 id="tienda-eslogan">Productos importados en Chachapoyas</h1>
+          <p class="portada-info">
+            <i class="bi bi-truck"></i> Delivery y envíos por agencia
+            <span class="mx-1">·</span>
+            <i class="bi bi-wallet2"></i> Pagos con <span id="tienda-pagos">Yape y Plin</span>
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
 
   <!-- ==========================================================
        3. BUSCADOR Y CATEGORÍAS
+       Bootstrap: input-group, form-control
        Los botones de categoría los crea script.js desde config.js
        ========================================================== -->
-  <section class="filtros">
-    <input type="search" id="buscador" class="buscador"
-           placeholder="Buscar producto..." aria-label="Buscar producto">
+  <section class="filtros container">
+    <div class="input-group buscador">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="search" id="buscador" class="form-control"
+             placeholder="Buscar producto..." aria-label="Buscar producto">
+    </div>
 
-    <nav class="categorias" id="lista-categorias" aria-label="Categorías">
+    <nav class="categorias d-flex gap-2 mt-3 pb-2" id="lista-categorias" aria-label="Categorías">
       <!-- script.js inserta aquí los botones -->
     </nav>
   </section>
@@ -69,11 +97,12 @@
 
   <!-- ==========================================================
        4. CATÁLOGO DE PRODUCTOS
-       script.js lee data/productos.json y crea las tarjetas aquí
+       Bootstrap: grilla adaptable
+       2 columnas en celular, 3 en tablet, 4 en computadora
        ========================================================== -->
-  <main class="catalogo">
-    <div class="grilla-productos" id="grilla-productos">
-      <!-- script.js inserta aquí las tarjetas -->
+  <main class="catalogo container">
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-3" id="grilla-productos">
+      <!-- script.js inserta aquí las tarjetas (card) -->
     </div>
 
     <p class="sin-resultados" id="sin-resultados" hidden>
@@ -84,95 +113,120 @@
 
   <!-- ==========================================================
        5. VENTANA DE DETALLE DEL PRODUCTO
-       Se abre al tocar un producto: foto grande, descripción,
-       elección de color y cantidad
+       Bootstrap: componente Modal
        ========================================================== -->
-  <div class="modal" id="modal-producto" hidden>
-    <div class="modal-fondo" data-cerrar></div>
+  <div class="modal fade" id="modal-producto" tabindex="-1" aria-labelledby="detalle-nombre" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="btn-close btn-cerrar-foto" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 
-    <div class="modal-contenido" role="dialog" aria-modal="true" aria-labelledby="detalle-nombre">
-      <button class="btn-cerrar" data-cerrar aria-label="Cerrar">✕</button>
+          <img src="" alt="" class="detalle-imagen" id="detalle-imagen">
+          <h2 class="detalle-nombre" id="detalle-nombre"></h2>
+          <p class="detalle-precio" id="detalle-precio"></p>
+          <p class="detalle-descripcion" id="detalle-descripcion"></p>
 
-      <img src="" alt="" class="detalle-imagen" id="detalle-imagen">
-      <h2 class="detalle-nombre" id="detalle-nombre"></h2>
-      <p class="detalle-precio" id="detalle-precio"></p>
-      <p class="detalle-descripcion" id="detalle-descripcion"></p>
+          <!-- Solo se muestra si el producto tiene colores -->
+          <div id="detalle-variantes" hidden>
+            <p class="etiqueta">Elige un color:</p>
+            <div class="d-flex flex-wrap gap-2" id="lista-variantes"></div>
+          </div>
 
-      <!-- Solo se muestra si el producto tiene colores -->
-      <div class="detalle-variantes" id="detalle-variantes" hidden>
-        <p class="etiqueta">Elige un color:</p>
-        <div class="lista-variantes" id="lista-variantes"></div>
+          <p class="etiqueta">Cantidad:</p>
+          <div class="input-group cantidad">
+            <button class="btn btn-cantidad" type="button" id="btn-menos" aria-label="Menos">
+              <i class="bi bi-dash-lg"></i>
+            </button>
+            <span class="input-group-text" id="detalle-cantidad">1</span>
+            <button class="btn btn-cantidad" type="button" id="btn-mas" aria-label="Más">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+
+          <button class="btn btn-principal w-100 mt-4" type="button" id="btn-agregar">
+            Agregar al carrito
+          </button>
+        </div>
       </div>
-
-      <div class="detalle-cantidad">
-        <p class="etiqueta">Cantidad:</p>
-        <button class="btn-cantidad" id="btn-menos" aria-label="Menos">−</button>
-        <span id="detalle-cantidad">1</span>
-        <button class="btn-cantidad" id="btn-mas" aria-label="Más">+</button>
-      </div>
-
-      <button class="btn-principal" id="btn-agregar">Agregar al carrito</button>
     </div>
   </div>
 
 
   <!-- ==========================================================
        6. CARRITO (panel lateral)
-       Lista de productos, datos del cliente, entrega y total
+       Bootstrap: componente Offcanvas + formularios
        ========================================================== -->
-  <aside class="carrito" id="carrito" hidden>
-    <div class="modal-fondo" data-cerrar-carrito></div>
+  <div class="offcanvas offcanvas-end carrito" tabindex="-1" id="carrito" aria-labelledby="carrito-titulo">
+    <div class="offcanvas-header">
+      <h2 class="offcanvas-title" id="carrito-titulo">
+        <i class="bi bi-bag-heart"></i> Tu pedido
+      </h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
+    </div>
 
-    <div class="carrito-panel" role="dialog" aria-modal="true" aria-labelledby="carrito-titulo">
-      <div class="carrito-cabecera">
-        <h2 id="carrito-titulo">Tu pedido</h2>
-        <button class="btn-cerrar" data-cerrar-carrito aria-label="Cerrar carrito">✕</button>
-      </div>
-
+    <div class="offcanvas-body">
       <!-- Productos agregados -->
-      <ul class="carrito-lista" id="carrito-lista"></ul>
-      <p class="carrito-vacio" id="carrito-vacio">Tu carrito está vacío.</p>
+      <ul class="list-unstyled mb-0" id="carrito-lista"></ul>
+      <p class="carrito-vacio" id="carrito-vacio">
+        <i class="bi bi-bag d-block mb-2"></i>
+        Tu carrito está vacío.
+      </p>
 
       <!-- Datos del cliente: solo se muestran si hay productos -->
-      <form class="carrito-formulario" id="carrito-formulario" hidden>
-        <label class="etiqueta" for="cliente-nombre">Tu nombre</label>
-        <input type="text" id="cliente-nombre" placeholder="Ej.: María López" required>
+      <form id="carrito-formulario" hidden>
+        <label class="form-label etiqueta" for="cliente-nombre">Tu nombre</label>
+        <input type="text" class="form-control" id="cliente-nombre" placeholder="Ej.: María López" required>
 
         <p class="etiqueta">¿Cómo lo recibes?</p>
-        <div class="opciones-entrega" id="opciones-entrega">
+        <div class="d-grid gap-2" id="opciones-entrega">
           <!-- script.js inserta aquí las opciones desde config.js -->
         </div>
 
-        <label class="etiqueta" for="cliente-dato" id="cliente-dato-etiqueta">Dirección o referencia</label>
-        <input type="text" id="cliente-dato" required>
+        <label class="form-label etiqueta" for="cliente-dato" id="cliente-dato-etiqueta">Dirección o referencia</label>
+        <input type="text" class="form-control" id="cliente-dato" required>
 
-        <div class="carrito-total">
+        <div class="carrito-total d-flex justify-content-between align-items-center">
           <span>Total</span>
           <strong id="carrito-total">S/ 0.00</strong>
         </div>
-        <p class="nota-envio">El costo de envío se coordina por WhatsApp.</p>
+        <p class="nota-envio" id="nota-envio">El costo de envío se coordina por WhatsApp.</p>
 
-        <button type="submit" class="btn-whatsapp">
-          Pedir por WhatsApp
+        <button type="submit" class="btn btn-whatsapp w-100">
+          <i class="bi bi-whatsapp"></i> Pedir por WhatsApp
         </button>
       </form>
     </div>
-  </aside>
+  </div>
 
 
   <!-- ==========================================================
-       7. PIE DE PÁGINA
+       7. AVISO FLOTANTE ("Agregado al carrito")
+       Bootstrap: componente Toast
+       ========================================================== -->
+  <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+    <div class="toast aviso border-0" id="aviso" role="status" aria-live="polite" aria-atomic="true" data-bs-delay="2200">
+      <div class="toast-body text-center" id="aviso-texto"></div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       8. PIE DE PÁGINA
        ========================================================== -->
   <footer class="pie">
-    <p>© 2026 <span id="pie-nombre">ValeriaStore</span> · <span id="pie-ciudad">Chachapoyas</span>, Perú</p>
-    <p class="pie-credito">Tienda creada por JersonTIC</p>
+    <div class="container text-center">
+      <p class="mb-1">© 2026 <span id="pie-nombre">ValeriaStore</span> · <span id="pie-ciudad">Chachapoyas</span>, Perú</p>
+      <p class="pie-credito mb-0">Tienda creada por JersonTIC</p>
+    </div>
   </footer>
 
 
   <!-- ==========================================================
        SCRIPTS: el orden importa
-       1° config.js (los datos)  →  2° script.js (la lógica que los usa)
+       1° Bootstrap (componentes)  →  2° config.js (los datos)
+       →  3° script.js (la lógica que usa ambos)
        ========================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
