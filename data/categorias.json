@@ -1,0 +1,7 @@
+[
+  { "id": "hogar",      "nombre": "Hogar",         "icono": "house-heart" },
+  { "id": "cocina",     "nombre": "Cocina",        "icono": "cup-hot" },
+  { "id": "belleza",    "nombre": "Belleza",       "icono": "stars" },
+  { "id": "tecnologia", "nombre": "Tecnología",    "icono": "phone" },
+  { "id": "ninos",      "nombre": "Bebés y niños", "icono": "balloon-heart" }
+]
