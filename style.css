@@ -12,7 +12,7 @@
 
 /* ==========================================================
    0. VARIABLES DE COLOR
-   Valores de respaldo: script.js los reemplaza con los colores
+   Valores de respaldo: js/ui/vistas.js los reemplaza con los colores
    de config.js al cargar la página.
    ========================================================== */
 :root {
@@ -93,6 +93,12 @@ body { line-height: 1.5; }
   font-weight: 800;
 }
 .btn-principal:hover { filter: brightness(0.93); }
+.btn-principal:disabled {
+  background-color: var(--agotado);
+  border-color: var(--agotado);
+  color: var(--blanco);
+  opacity: 1;
+}
 
 /* Botón verde de WhatsApp: el que cierra la venta */
 .btn-whatsapp {
@@ -572,4 +578,104 @@ body { line-height: 1.5; }
   .portada-imagen { margin-left: auto; margin-right: 0; }
   .portada-texto h1 { font-size: 2.1rem; }
   .tarjeta:hover { transform: translateY(-4px); }
+}
+
+
+/* ==========================================================
+   12. ESTADOS DE LA CAPA DE SERVICIO
+   Carga, error y confirmación: lo que el cliente ve mientras
+   la tienda conversa con la API
+   ========================================================== */
+
+/* Tarjetas "fantasma" mientras cargan los productos */
+.tarjeta-imagen.placeholder-glow {
+  display: block;
+  aspect-ratio: 1 / 1;
+}
+.tarjeta-imagen .placeholder {
+  display: block;
+  background-color: var(--rosa-claro);
+  opacity: 1;
+}
+.tarjeta-info .placeholder { background-color: var(--secundario); }
+
+.categoria-fantasma {
+  display: inline-block;
+  width: 86px;
+  height: 31px;
+  background-color: var(--secundario);
+}
+
+.categoria .bi { margin-right: 2px; }
+
+/* Error al cargar el catálogo */
+.alerta-error {
+  max-width: 460px;
+  margin: 12px auto;
+  padding: 24px 20px;
+  border: 2px dashed var(--suave);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  color: var(--texto);
+}
+.alerta-error > .bi { font-size: 2.2rem; color: var(--principal); }
+.btn-reintentar { width: auto; padding: 10px 22px; margin-top: 0; font-size: 0.95rem; }
+
+/* Aviso en rojo cuando algo sale mal */
+.aviso.aviso-error { background: var(--principal); }
+
+/* Mensajes de validación del formulario */
+.carrito .invalid-feedback {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--principal);
+}
+.carrito .form-control.is-invalid {
+  border-color: var(--principal);
+  background-image: none;
+  padding-right: 14px;
+}
+.carrito .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(184, 73, 109, 0.25);
+}
+
+/* Botón con spinner mientras se registra el pedido */
+#btn-confirmar { margin-top: 16px; }
+#btn-confirmar:disabled {
+  background-color: var(--principal);
+  border-color: var(--principal);
+  color: var(--blanco);
+  opacity: 0.8;
+}
+
+/* Pantalla de pedido confirmado */
+.confirmacion { padding-top: 12px; animation: aparecer 0.3s ease; }
+.confirmacion-icono { font-size: 3.4rem; color: var(--whatsapp); line-height: 1; }
+.confirmacion-titulo { margin: 10px 0 6px; font-size: 1.35rem; font-weight: 800; }
+.confirmacion-codigo {
+  display: inline-block;
+  margin: 0 0 4px;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: var(--secundario);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.confirmacion-paso {
+  margin: 18px 0 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.btn-volver {
+  margin-top: 8px;
+  color: var(--gris);
+  font-weight: 700;
+  text-decoration: none;
+}
+.btn-volver:hover { color: var(--principal); }
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
 }

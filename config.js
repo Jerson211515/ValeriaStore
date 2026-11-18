@@ -3,7 +3,7 @@
    ----------------------------------------------------------
    Este es el ÚNICO archivo que necesitas cambiar para
    adaptar la tienda a otro negocio.
-   No hace falta tocar index.html, style.css ni script.js.
+   No hace falta tocar index.html, style.css ni la carpeta js/.
    ========================================================== */
 
 const CONFIG = {
@@ -53,20 +53,21 @@ const CONFIG = {
      El pago se coordina por WhatsApp.                   */
   pagos: ["Yape", "Plin"],
 
-  /* ---------- 5. Categorías ----------
-     El "id" debe coincidir con la categoría
-     de cada producto en data/productos.json             */
-  categorias: [
-    { id: "todo",       nombre: "Todo" },
-    { id: "hogar",      nombre: "Hogar" },
-    { id: "cocina",     nombre: "Cocina" },
-    { id: "belleza",    nombre: "Belleza" },
-    { id: "tecnologia", nombre: "Tecnología" },
-    { id: "ninos",      nombre: "Bebés y niños" }
-  ],
+  /* ---------- 5. Conexión con la API (capa de servicio) ----------
+     "simulado": usa js/api/servidorSimulado.js, que lee los
+                 archivos de data/ (ideal para GitHub Pages).
+     "real":     envía las peticiones a un backend en urlBase.
+     Las categorías y productos ya no van aquí: los entrega
+     la API desde data/categorias.json y data/productos.json  */
+  api: {
+    modo: "simulado",
+    urlBase: "",                // ej.: "https://mi-servidor.com/api" (solo modo real)
+    demoraSimulada: 400,        // milisegundos, imita el viaje por internet
+    mostrarEnConsola: true      // muestra cada petición en la consola (F12)
+  },
 
   /* ---------- 6. Colores (sacados del logo) ----------
-     script.js los aplica automáticamente a style.css    */
+     js/ui/vistas.js los aplica automáticamente a style.css    */
   colores: {
     principal:   "#B8496D",   // rosa intenso: botones y precios
     suave:       "#E896AE",   // rosa Valeria: detalles

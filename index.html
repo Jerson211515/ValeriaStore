@@ -80,7 +80,7 @@
   <!-- ==========================================================
        3. BUSCADOR Y CATEGORÍAS
        Bootstrap: input-group, form-control
-       Los botones de categoría los crea script.js desde config.js
+       Los botones de categoría los crea main.js con datos de la API
        ========================================================== -->
   <section class="filtros container">
     <div class="input-group buscador">
@@ -90,7 +90,7 @@
     </div>
 
     <nav class="categorias d-flex gap-2 mt-3 pb-2" id="lista-categorias" aria-label="Categorías">
-      <!-- script.js inserta aquí los botones -->
+      <!-- main.js inserta aquí los botones -->
     </nav>
   </section>
 
@@ -102,7 +102,7 @@
        ========================================================== -->
   <main class="catalogo container">
     <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-3" id="grilla-productos">
-      <!-- script.js inserta aquí las tarjetas (card) -->
+      <!-- main.js inserta aquí las tarjetas (card) -->
     </div>
 
     <p class="sin-resultados" id="sin-resultados" hidden>
@@ -165,36 +165,69 @@
     </div>
 
     <div class="offcanvas-body">
-      <!-- Productos agregados -->
-      <ul class="list-unstyled mb-0" id="carrito-lista"></ul>
-      <p class="carrito-vacio" id="carrito-vacio">
-        <i class="bi bi-bag d-block mb-2"></i>
-        Tu carrito está vacío.
-      </p>
 
-      <!-- Datos del cliente: solo se muestran si hay productos -->
-      <form id="carrito-formulario" hidden>
-        <label class="form-label etiqueta" for="cliente-nombre">Tu nombre</label>
-        <input type="text" class="form-control" id="cliente-nombre" placeholder="Ej.: María López" required>
+      <!-- 6.1 Contenido del carrito -->
+      <div id="carrito-contenido">
+        <!-- Productos agregados -->
+        <ul class="list-unstyled mb-0" id="carrito-lista"></ul>
+        <p class="carrito-vacio" id="carrito-vacio">
+          <i class="bi bi-bag d-block mb-2"></i>
+          Tu carrito está vacío.
+        </p>
 
-        <p class="etiqueta">¿Cómo lo recibes?</p>
-        <div class="d-grid gap-2" id="opciones-entrega">
-          <!-- script.js inserta aquí las opciones desde config.js -->
-        </div>
+        <!-- Datos del cliente: solo se muestran si hay productos.
+             novalidate: la validación la hace pedidoService y se
+             muestra con los estilos de Bootstrap (is-invalid) -->
+        <form id="carrito-formulario" novalidate hidden>
+          <label class="form-label etiqueta" for="cliente-nombre">Tu nombre</label>
+          <input type="text" class="form-control" id="cliente-nombre" placeholder="Ej.: María López" autocomplete="name">
+          <div class="invalid-feedback" id="error-nombre"></div>
 
-        <label class="form-label etiqueta" for="cliente-dato" id="cliente-dato-etiqueta">Dirección o referencia</label>
-        <input type="text" class="form-control" id="cliente-dato" required>
+          <p class="etiqueta">¿Cómo lo recibes?</p>
+          <div class="d-grid gap-2" id="opciones-entrega">
+            <!-- main.js inserta aquí las opciones desde config.js -->
+          </div>
 
-        <div class="carrito-total d-flex justify-content-between align-items-center">
+          <label class="form-label etiqueta" for="cliente-dato" id="cliente-dato-etiqueta">Dirección o referencia</label>
+          <input type="text" class="form-control" id="cliente-dato">
+          <div class="invalid-feedback" id="error-dato"></div>
+
+          <div class="carrito-total d-flex justify-content-between align-items-center">
+            <span>Total</span>
+            <strong id="carrito-total">S/ 0.00</strong>
+          </div>
+          <p class="nota-envio" id="nota-envio">El costo de envío se coordina por WhatsApp.</p>
+
+          <!-- Envía el pedido a la capa de servicio (POST /pedidos) -->
+          <button type="submit" class="btn btn-principal w-100" id="btn-confirmar">
+            <span class="spinner-border spinner-border-sm me-2" id="spinner-confirmar" aria-hidden="true" hidden></span>
+            <span id="texto-confirmar">Confirmar pedido</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- 6.2 Pedido confirmado: muestra la respuesta del servidor -->
+      <div class="confirmacion text-center" id="pedido-confirmado" hidden>
+        <i class="bi bi-check-circle confirmacion-icono" aria-hidden="true"></i>
+        <h3 class="confirmacion-titulo">¡Pedido registrado!</h3>
+        <p class="mb-1">Tu número de pedido es</p>
+        <p class="confirmacion-codigo" id="confirmacion-codigo"></p>
+        <div class="carrito-total d-flex justify-content-between align-items-center text-start">
           <span>Total</span>
-          <strong id="carrito-total">S/ 0.00</strong>
+          <strong id="confirmacion-total"></strong>
         </div>
-        <p class="nota-envio" id="nota-envio">El costo de envío se coordina por WhatsApp.</p>
+        <p class="nota-envio text-start" id="confirmacion-nota"></p>
 
-        <button type="submit" class="btn btn-whatsapp w-100">
-          <i class="bi bi-whatsapp"></i> Pedir por WhatsApp
+        <p class="confirmacion-paso">
+          Último paso: envía tu pedido por WhatsApp para coordinar el pago y la entrega.
+        </p>
+        <a class="btn btn-whatsapp w-100" id="btn-enviar-whatsapp" href="#" target="_blank" rel="noopener">
+          <i class="bi bi-whatsapp"></i> Enviar pedido por WhatsApp
+        </a>
+        <button type="button" class="btn btn-link btn-volver" id="btn-volver-carrito">
+          Volver al carrito
         </button>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -223,11 +256,12 @@
 
   <!-- ==========================================================
        SCRIPTS: el orden importa
-       1° Bootstrap (componentes)  →  2° config.js (los datos)
-       →  3° script.js (la lógica que usa ambos)
+       1° Bootstrap (componentes)   2° config.js (los datos)
+       3° js/main.js: módulo que carga la capa de servicio
+          (type="module" permite usar import / export)
        ========================================================== -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="config.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
